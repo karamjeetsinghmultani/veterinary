@@ -1,0 +1,81 @@
+== README
+
+This README would normally document whatever steps are necessary to get the
+application up and running.
+
+Things you may want to cover:
+
+* Ruby version
+
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
+
+
+Please feel free to use a different markup language if you do not plan to run
+<tt>rake doc:app</tt>.
+
+
+
+
+
+
+
+
+
+rails new veterinaryApp
+cd veterinaryApp
+bundle install 
+rails g scaffold doctors name:string address:text city:string zip:integer school:string years_in_practice:integer
+
+
+rails g scaffold schedules date:string pet:string customer:string reminder:boolean reason_for_visit:string
+
+
+rails g scaffold customer_pets name:string pet_type:string breed:string age:integer weight:integer date:string
+
+
+rails g scaffold appointments name:string next_appointment:string reason_for_visit:string
+
+rake db:create:all 
+rake db:migrate
+
+
+class Doctor < ActiveRecord::Base
+	validates :name, { maximum: 35 }
+	validates :zip, length: { is: 5 }
+	validates :years_in_practice, length: { in: 6..20 }
+end
+
+
+class Schedule < ActiveRecord::Base
+
+	validates :date, presence: true
+	validates :pet, presence: true
+	validates :customer, presence: true
+	validates :reason_for_visit, presence: true
+end
+
+
+class CustomerPet < ActiveRecord::Base
+	self.inheritance_column = nil
+	validates_length_of :name,  maximum: 35 
+	validates_inclusion_of :pet_type, in: %w( dog cat bird ), message: "extension %{value} is not included in the list"
+	validates :breed, presence: true
+	validates :age, presence: true
+	validates :weight, presence: true
+	validates :date, presence: true
+end
+
